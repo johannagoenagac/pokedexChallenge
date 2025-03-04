@@ -64,3 +64,6 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt-android-gradle-plugin = { id = "com.google.dagger.hilt.android", version = "2.48" }
+detekt = {id ="io.gitlab.arturbosch.detekt", version = "1.23.0"}
+
+

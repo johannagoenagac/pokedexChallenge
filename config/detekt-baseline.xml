@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>FunctionNaming:Theme.kt$@Composable fun PokedexChallengeTheme( darkTheme: Boolean = isSystemInDarkTheme(), // Dynamic color is available on Android 12+ dynamicColor: Boolean = true, content: @Composable () -&gt; Unit )</ID>
+    <ID>MagicNumber:Color.kt$0xFF625b71</ID>
+    <ID>MagicNumber:Color.kt$0xFF6650a4</ID>
+    <ID>MagicNumber:Color.kt$0xFF7D5260</ID>
+    <ID>MagicNumber:Color.kt$0xFFCCC2DC</ID>
+    <ID>MagicNumber:Color.kt$0xFFD0BCFF</ID>
+    <ID>MagicNumber:Color.kt$0xFFEFB8C8</ID>
+    <ID>MatchingDeclarationName:PokemonApiService.kt$PokeApiService</ID>
+    <ID>NewLineAtEndOfFile:ExampleUnitTest.kt$com.example.pokedexchallenge.ExampleUnitTest.kt</ID>
+    <ID>NewLineAtEndOfFile:PokemonApiService.kt$com.example.pokedexchallenge.data.remote.PokemonApiService.kt</ID>
+    <ID>NewLineAtEndOfFile:Theme.kt$com.example.pokedexchallenge.ui.theme.Theme.kt</ID>
+    <ID>NewLineAtEndOfFile:Type.kt$com.example.pokedexchallenge.ui.theme.Type.kt</ID>
+    <ID>WildcardImport:ExampleUnitTest.kt$import org.junit.Assert.*</ID>
+  </CurrentIssues>
+</SmellBaseline>

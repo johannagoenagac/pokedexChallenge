@@ -16,7 +16,7 @@ data class OtherSprites(
 )
 
 data class OfficialArtwork(
-    val front_default: String
+    val frontDefault: String
 )
 
 data class PokemonType(

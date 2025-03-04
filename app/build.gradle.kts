@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.hilt.android.gradle.plugin)
     id("kotlin-kapt")
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -49,7 +50,18 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    detekt {
+        config.setFrom("$rootDir/config/detekt.yml")
+        buildUponDefaultConfig = true
+        allRules = false
+        baseline = file("$rootDir/config/detekt-baseline.xml")
+    }
+
+
 }
+
+
 
 dependencies {
 
@@ -101,4 +113,5 @@ dependencies {
     // Mocking para tests
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
+
 }

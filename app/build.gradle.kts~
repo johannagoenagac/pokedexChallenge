@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.hilt.android.gradle.plugin)
+    id("kotlin-kapt")
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -47,7 +50,19 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    detekt {
+        toolVersion = "1.23.0" // Opcional si ya está en `libs.versions.toml`
+        config = files("$rootDir/config/detekt.yml") // Archivo de configuración
+        buildUponDefaultConfig = true // Usar la configuración base
+        allRules = false // Activar todas las reglas (opcional)
+        baseline = file("$rootDir/config/detekt-baseline.xml") // Opcional
+    }
+
+
 }
+
+
 
 dependencies {
 
@@ -66,4 +81,38 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Navigation Compose
+    implementation(libs.androidx.navigation.compose)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    // Retrofit + OkHttp
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
+    // Paging 3
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.paging.compose)
+
+    // Coil para imágenes
+    implementation(libs.coil.compose)
+
+    androidTestImplementation(libs.ui.test.junit4)
+    debugImplementation(libs.ui.test.manifest)
+
+    // Mocking para tests
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+
 }
