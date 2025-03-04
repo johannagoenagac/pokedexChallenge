@@ -1,0 +1,3 @@
+package com.example.pokedexchallenge.data.remote.model
+
+data class PokemonDetailDto()
