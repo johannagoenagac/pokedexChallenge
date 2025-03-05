@@ -1,4 +1,4 @@
-package com.example.pokedexchallenge.data.remote.model
+package com.example.pokedexchallenge.domain.model
 
 data class PokemonItem(
     val pokemonName: String,
