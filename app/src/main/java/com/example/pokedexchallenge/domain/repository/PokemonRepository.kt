@@ -1,9 +1,10 @@
 package com.example.pokedexchallenge.domain.repository
 
-import com.example.pokedexchallenge.data.remote.model.PokemonDetailResponse
-import com.example.pokedexchallenge.data.remote.model.PokemonListResponse
+import com.example.pokedexchallenge.data.remote.model.Pokemon
+import com.example.pokedexchallenge.data.remote.model.PokemonList
+import com.example.pokedexchallenge.utils.Resource
 
 interface PokemonRepository {
-    suspend fun getPokemonList(limit: Int, offset: Int): Result<PokemonListResponse>
-    suspend fun getPokemonDetail(name: String): Result<PokemonDetailResponse>
+    suspend fun getPokemonList(limit: Int, offset: Int): Resource<PokemonList>
+    suspend fun getPokemonDetail(name: String): Resource<Pokemon>
 }

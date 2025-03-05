@@ -1,21 +1,30 @@
 package com.example.pokedexchallenge.data.repository
 
 import com.example.pokedexchallenge.data.remote.PokeApiService
-import com.example.pokedexchallenge.data.remote.model.PokemonDetailResponse
-import com.example.pokedexchallenge.data.remote.model.PokemonListResponse
+import com.example.pokedexchallenge.data.remote.model.Pokemon
+import com.example.pokedexchallenge.data.remote.model.PokemonList
 import com.example.pokedexchallenge.domain.repository.PokemonRepository
-import com.example.pokedexchallenge.utils.safeApiCall
+import com.example.pokedexchallenge.utils.Resource
 import javax.inject.Inject
 
 class PokemonRepositoryImpl @Inject constructor(
     private val apiService: PokeApiService
 ) : PokemonRepository {
-
-    override suspend fun getPokemonList(limit: Int, offset: Int): Result<PokemonListResponse> {
-        return safeApiCall { apiService.getPokemonList(limit, offset) }
+    override suspend fun getPokemonList(limit: Int, offset: Int): Resource<PokemonList> {
+        val response = try {
+            apiService.getPokemonList(limit, offset)
+        } catch (e: Exception) {
+            return Resource.Error("An unknown error ocurred")
+        }
+        return Resource.Success(response)
     }
 
-    override suspend fun getPokemonDetail(name: String): Result<PokemonDetailResponse> {
-        return safeApiCall { apiService.getPokemonDetail(name) }
+    override suspend fun getPokemonDetail(name: String): Resource<Pokemon> {
+        val response = try {
+            apiService.getPokemonDetail(name)
+        } catch (e: Exception) {
+            return Resource.Error("An unknown error ocurred")
+        }
+        return Resource.Success(response)
     }
 }
