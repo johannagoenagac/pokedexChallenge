@@ -8,5 +8,5 @@
     <string name="weight_text">Peso: %1s</string>
     <string name="abilities_text">Habilidades: %1s</string>
     <string name="moves_text">Movimientos: %1s</string>
-    <string name="empty_list_description">No tienes pokemones favoritos></string>
+    <string name="empty_list_description">No tienes pokemones favoritos</string>
 </resources>

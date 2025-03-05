@@ -10,11 +10,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.pokedexchallenge.R
 import com.example.pokedexchallenge.domain.model.PokemonItem
+import com.example.pokedexchallenge.navigation.NavigationRoutes
 import com.example.pokedexchallenge.presentation.ui.pokemonlist.PokemonListItem
 import com.example.pokedexchallenge.presentation.viewmodel.PokemonViewModel
 
@@ -23,7 +25,7 @@ fun FavoritesPokemonListScreen(navController: NavController) {
     val viewModel: PokemonViewModel = hiltViewModel()
     val favoritePokemons = viewModel.favoritePokemonsState.collectAsState().value
 
-    if(favoritePokemons.isEmpty()) {
+    if (favoritePokemons.isNotEmpty()) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(favoritePokemons) { pokemon ->
                 PokemonListItem(
@@ -32,20 +34,22 @@ fun FavoritesPokemonListScreen(navController: NavController) {
                         imageUrl = pokemon.imageUrl,
                         number = pokemon.id
                     ),
-                    favoritePokemons = emptyList(),
-                    onPokemonClick = { navController.navigate("pokemonDetail/${pokemon.name}") }
+                    favoritePokemons = favoritePokemons.filter { it.name != pokemon.name },
+                    onPokemonClick = {
+                        navController.navigate(
+                            NavigationRoutes.POKEMON_DETAIL.replace("{pokemonName}", pokemon.name)
+                        )
+                    }, sizePokemon = 80.dp
                 )
             }
         }
-    }else{
-
+    } else {
+        EmptyFavoritesPokemonListScreen()
     }
-
-
 }
 
 @Composable
-fun EmptyfavoritesPokemonListScreen(){
+fun EmptyFavoritesPokemonListScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

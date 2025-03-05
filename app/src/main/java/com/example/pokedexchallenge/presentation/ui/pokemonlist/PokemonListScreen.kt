@@ -13,19 +13,22 @@ import com.example.pokedexchallenge.presentation.viewmodel.PokemonUiState
 fun PokemonListScreen(navController: NavController) {
     val viewModel: PokemonViewModel = hiltViewModel()
     val pokemonListState = viewModel.pokemonListState.collectAsState()
+    val favoritePokemonsState = viewModel.favoritePokemonsState.collectAsState()
 
     LaunchedEffect(Unit) {
-       viewModel.fetchPokemonList()
+        viewModel.fetchPokemonList()
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (val state = pokemonListState.value) {
             is PokemonUiState.Loading -> {
-
+                PokemonListSkeleton()
             }
+
             is PokemonUiState.Success -> {
                 PokemonListSuccess(
                     pokemonList = state.data,
+                    favoritePokemons = favoritePokemonsState.value,
                     onPokemonClick = { pokemonName ->
                         navController.navigate("pokemonDetail/$pokemonName")
                     },
@@ -33,12 +36,13 @@ fun PokemonListScreen(navController: NavController) {
                     onLoadMore = { viewModel.fetchPokemonList() }
                 )
             }
-            is PokemonUiState.Error -> {
 
+            is PokemonUiState.Error -> {
+                //Todo add error component
             }
 
             is PokemonUiState.Empty -> {
-
+                //Todo add emptyList component
             }
         }
     }
