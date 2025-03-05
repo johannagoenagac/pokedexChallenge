@@ -13,11 +13,6 @@ class GetPokemonDetailUseCase @Inject constructor(
 ) {
     operator fun invoke(name: String): Flow<Resource<Pokemon>> = flow {
         emit(Resource.Loading())
-        try {
-            val result = repository.getPokemonDetail(name)
-            emit(result)
-        } catch (e: Exception) {
-            emit(Resource.Error("Error al obtener detalles del Pokémon: ${e.message}"))
-        }
+        emit(repository.getPokemonDetail(name))
     }
 }

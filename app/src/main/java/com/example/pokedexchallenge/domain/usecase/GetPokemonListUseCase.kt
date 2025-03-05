@@ -1,8 +1,8 @@
 package com.example.pokedexchallenge.domain.usecase
 
 
-import com.example.pokedexchallenge.domain.repository.PokemonRepository
 import com.example.pokedexchallenge.data.remote.model.PokemonList
+import com.example.pokedexchallenge.domain.repository.PokemonRepository
 import com.example.pokedexchallenge.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -13,11 +13,6 @@ class GetPokemonListUseCase @Inject constructor(
 ) {
     operator fun invoke(limit: Int, offset: Int): Flow<Resource<PokemonList>> = flow {
         emit(Resource.Loading())
-        try {
-            val result = repository.getPokemonList(limit, offset)
-            emit(result)
-        } catch (e: Exception) {
-            emit(Resource.Error("Error al obtener la lista de Pokémon: ${e.message}"))
-        }
+        emit(repository.getPokemonList(limit, offset))
     }
 }

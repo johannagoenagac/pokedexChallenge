@@ -1,13 +1,17 @@
 package com.example.pokedexchallenge.data.local.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.example.pokedexchallenge.data.local.entities.PokemonEntity
 import com.example.pokedexchallenge.data.local.entities.SearchQueryEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PokemonDao {
-    // Operaciones para favoritos
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFavorite(pokemon: PokemonEntity)
 
@@ -20,7 +24,6 @@ interface PokemonDao {
     @Query("SELECT EXISTS(SELECT 1 FROM pokemon_favorites WHERE id = :pokemonId)")
     suspend fun isFavorite(pokemonId: Int): Boolean
 
-    // Operaciones para búsquedas recientes
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSearchQuery(searchQuery: SearchQueryEntity)
 

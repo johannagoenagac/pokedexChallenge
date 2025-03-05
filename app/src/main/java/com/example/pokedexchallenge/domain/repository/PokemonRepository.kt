@@ -11,13 +11,11 @@ interface PokemonRepository {
     suspend fun getPokemonList(limit: Int, offset: Int): Resource<PokemonList>
     suspend fun getPokemonDetail(name: String): Resource<Pokemon>
 
-    // Favoritos
     suspend fun addFavorite(pokemon: PokemonEntity)
     suspend fun removeFavorite(pokemon: PokemonEntity)
     fun getAllFavorites(): Flow<List<PokemonEntity>>
     suspend fun isFavorite(pokemonId: Int): Boolean
 
-    // Búsquedas recientes
     suspend fun saveSearchQuery(query: String)
     fun getRecentSearches(): Flow<List<SearchQueryEntity>>
     suspend fun clearSearchHistory()

@@ -2,6 +2,7 @@ package com.example.pokedexchallenge.presentation.ui.pokemonlist
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,13 +22,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
+import com.example.pokedexchallenge.R
 import com.example.pokedexchallenge.data.local.entities.PokemonEntity
 import com.example.pokedexchallenge.domain.model.PokemonItem
-import java.util.Locale
+import com.example.pokedexchallenge.presentation.ui.components.PokemonListTitle
 
 @Composable
 fun PokemonListSuccess(
@@ -37,19 +40,23 @@ fun PokemonListSuccess(
     listState: androidx.compose.foundation.lazy.LazyListState,
     onLoadMore: () -> Unit
 ) {
-    LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
-        items(pokemonList) { pokemon ->
-            PokemonListItem(pokemon, favoritePokemons, onPokemonClick)
-        }
+    Column {
+        PokemonListTitle(stringResource(id = R.string.pokemon_list_title))
+        LazyColumn(modifier = Modifier.fillMaxSize(), state = listState) {
+            items(pokemonList) { pokemon ->
+                PokemonListItem(pokemon, favoritePokemons, onPokemonClick)
+            }
 
-        item {
-            LaunchedEffect(listState.isScrollInProgress) {
-                if (!listState.isScrollInProgress && listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == pokemonList.lastIndex) {
-                    onLoadMore()
+            item {
+                LaunchedEffect(listState.isScrollInProgress) {
+                    if (!listState.isScrollInProgress && listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == pokemonList.lastIndex) {
+                        onLoadMore()
+                    }
                 }
             }
         }
     }
+
 }
 
 
@@ -58,7 +65,7 @@ fun PokemonListItem(
     pokemon: PokemonItem,
     favoritePokemons: List<PokemonEntity>,
     onPokemonClick: (String) -> Unit,
-    sizePokemon: Dp = 100.dp
+    sizePokemon: Dp = 80.dp
 ) {
     Card(
         modifier = Modifier
@@ -85,7 +92,7 @@ fun PokemonListItem(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = pokemon.pokemonName.capitalize(Locale.ROOT),
+                    text = pokemon.pokemonName.replaceFirstChar { it.uppercase() },
                     style = MaterialTheme.typography.titleLarge
                 )
             }

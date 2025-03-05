@@ -21,7 +21,8 @@ import com.example.pokedexchallenge.utils.constants.Constants.MAX_ITEMS_SKELETON
 
 @Composable
 fun PokemonListSkeleton() {
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Column(modifier = Modifier
+        .fillMaxSize()) {
         repeat(MAX_ITEMS_SKELETON) {
             PokemonListItemSkeleton()
             Spacer(modifier = Modifier.height(8.dp))
@@ -41,9 +42,10 @@ fun PokemonListItemSkeleton() {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+
             Box(
                 modifier = Modifier
-                    .size(64.dp)
+                    .size(80.dp)
                     .shimmerEffect()
             )
             Spacer(modifier = Modifier.width(16.dp))

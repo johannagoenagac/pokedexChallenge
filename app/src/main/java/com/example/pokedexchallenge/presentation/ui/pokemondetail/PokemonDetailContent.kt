@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +37,6 @@ import com.example.pokedexchallenge.data.local.entities.PokemonEntity
 import com.example.pokedexchallenge.data.remote.model.Pokemon
 import com.example.pokedexchallenge.presentation.ui.components.ActionButton
 import com.example.pokedexchallenge.presentation.viewmodel.PokemonViewModel
-import java.util.Locale
 
 @Composable
 fun PokemonDetailContent(pokemon: Pokemon) {
@@ -77,7 +77,7 @@ fun PokemonDetailContent(pokemon: Pokemon) {
             }
         }
 
-        val name = pokemon.name.capitalize(Locale.ROOT)
+        val name = pokemon.name.replaceFirstChar { it.uppercase() }
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = name, style = MaterialTheme.typography.headlineMedium)
         Text(
@@ -108,9 +108,11 @@ fun PokemonDetailContent(pokemon: Pokemon) {
                 if (isFavorite) stringResource(id = R.string.remove_favorite_button_label)
                 else stringResource(id = R.string.add_favorite_button_label)
 
+            val icon = if (isFavorite) Icons.Filled.Delete else Icons.Filled.Favorite
+
             ActionButton(
                 text = textButton,
-                icon = Icons.Filled.Favorite,
+                icon = icon,
                 onClick = {
                     if (isFavorite) {
                         viewModel.removeFavorite(
@@ -134,4 +136,6 @@ fun PokemonDetailContent(pokemon: Pokemon) {
             )
         }
     }
+
 }
+

@@ -3,19 +3,19 @@ package com.example.pokedexchallenge.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedexchallenge.data.local.entities.PokemonEntity
-import com.example.pokedexchallenge.domain.model.PokemonItem
 import com.example.pokedexchallenge.data.remote.model.Pokemon
+import com.example.pokedexchallenge.domain.model.PokemonItem
 import com.example.pokedexchallenge.domain.repository.PokemonRepository
-import com.example.pokedexchallenge.domain.usecase.GetPokemonListUseCase
 import com.example.pokedexchallenge.domain.usecase.GetPokemonDetailUseCase
+import com.example.pokedexchallenge.domain.usecase.GetPokemonListUseCase
+import com.example.pokedexchallenge.utils.Resource
+import com.example.pokedexchallenge.utils.constants.Constants.IMAGE_BASE_URL
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.example.pokedexchallenge.utils.Resource
-import com.example.pokedexchallenge.utils.constants.Constants.IMAGE_BASE_URL
 
 @HiltViewModel
 class PokemonViewModel @Inject constructor(
@@ -86,6 +86,14 @@ class PokemonViewModel @Inject constructor(
         }
     }
 
+    fun retryFetchingPokemonList() {
+        viewModelScope.launch {
+            _pokemonListState.value = PokemonUiState.Loading
+            fetchPokemonList()
+        }
+    }
+
+
     fun fetchPokemonDetail(name: String) {
         viewModelScope.launch {
             getPokemonDetailUseCase(name).collect { result ->
@@ -132,6 +140,7 @@ class PokemonViewModel @Inject constructor(
         }
     }
 
+    // Todo Implment UI
     fun saveSearchQuery(query: String) {
         viewModelScope.launch {
             pokemonRepository.saveSearchQuery(query)

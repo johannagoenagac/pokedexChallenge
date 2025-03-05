@@ -9,4 +9,11 @@
     <string name="abilities_text">Habilidades: %1s</string>
     <string name="moves_text">Movimientos: %1s</string>
     <string name="empty_list_description">No tienes pokemones favoritos</string>
+    <string name="empty_pokemon_list_description">No se encontraron Pokemones disponibles</string>
+    <string name="error_list_message">Lo sentimos, ha ocurrido un error. Por favor intenta más tarde</string>
+    <string name="pokemon_list_title">"¡Encuentra a tu Pokémon!"</string>
+    <string name="retry_button_label">Reintentar</string>
+    <string name="exit_button_label">Salir</string>
+    <string name="favorites_list_title">Mis Pokemones Favoritos</string>
+    <string name="error_detail_description">Lo sentimos, ha ocurrido un error. Vuelve a intentarlo</string>
 </resources>
