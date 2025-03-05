@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -37,7 +38,7 @@ fun PokemonListSuccess(
     pokemonList: List<PokemonItem>,
     favoritePokemons: List<PokemonEntity>,
     onPokemonClick: (String) -> Unit,
-    listState: androidx.compose.foundation.lazy.LazyListState,
+    listState: LazyListState,
     onLoadMore: () -> Unit
 ) {
     Column {
@@ -49,7 +50,9 @@ fun PokemonListSuccess(
 
             item {
                 LaunchedEffect(listState.isScrollInProgress) {
-                    if (!listState.isScrollInProgress && listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == pokemonList.lastIndex) {
+                    if (!listState.isScrollInProgress &&
+                        listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == pokemonList.lastIndex
+                    ) {
                         onLoadMore()
                     }
                 }
@@ -101,3 +104,5 @@ fun PokemonListItem(
         }
     }
 }
+
+

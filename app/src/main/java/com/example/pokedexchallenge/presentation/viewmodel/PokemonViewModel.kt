@@ -1,5 +1,6 @@
 package com.example.pokedexchallenge.presentation.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedexchallenge.data.local.entities.PokemonEntity
@@ -39,53 +40,58 @@ class PokemonViewModel @Inject constructor(
 
     private var currentOffset = 0
     private val pageSize = 20
-    private var allPokemonList: MutableList<PokemonItem> = mutableListOf()
+    private val allPokemonList: MutableList<PokemonItem> = mutableListOf()
+
+    var endReached = mutableStateOf(false)
+        private set
+    var isLoading = mutableStateOf(false)
+        private set
+
 
     init {
         loadFavorites()
+        fetchPokemonList()
     }
 
     fun fetchPokemonList() {
-        viewModelScope.launch {
-            if (allPokemonList.isNotEmpty()) {
-                _pokemonListState.value = PokemonUiState.Success(allPokemonList)
-                return@launch
-            }
+        if (isLoading.value || endReached.value) return
 
+        isLoading.value = true
+        viewModelScope.launch {
             getPokemonListUseCase(limit = pageSize, offset = currentOffset).collect { result ->
                 when (result) {
-                    is Resource.Loading -> {
-                        _pokemonListState.value = PokemonUiState.Loading
-                    }
-
+                    is Resource.Loading -> _pokemonListState.value = PokemonUiState.Loading
                     is Resource.Success -> {
-                        val newPokemonList =
-                            result.data?.results.orEmpty().mapIndexed { index, pokemon ->
+                        result.data?.let { data ->
+                            val newPokemonList = data.results.mapIndexed { index, pokemon ->
                                 val number = currentOffset + index + 1
                                 PokemonItem(
                                     pokemonName = pokemon.name,
-                                    imageUrl = "${IMAGE_BASE_URL}$number.png",
+                                    imageUrl = "$IMAGE_BASE_URL$number.png",
                                     number = number
                                 )
                             }
 
-                        if (newPokemonList.isEmpty()) {
-                            _pokemonListState.value = PokemonUiState.Empty
-                        } else {
-                            allPokemonList.addAll(newPokemonList)
-                            _pokemonListState.value = PokemonUiState.Success(allPokemonList)
-                            currentOffset += pageSize
+                            if (newPokemonList.isEmpty()) {
+                                _pokemonListState.value = PokemonUiState.Empty
+                            } else {
+                                allPokemonList.addAll(newPokemonList)
+                                _pokemonListState.value = PokemonUiState.Success(allPokemonList)
+                                currentOffset += pageSize
+
+                                // Si ya alcanzamos el total de la API, marcamos como fin de la lista
+                                endReached.value = allPokemonList.size >= data.count
+                            }
                         }
                     }
-
                     is Resource.Error -> {
                         _pokemonListState.value = PokemonUiState.Error(result.message!!)
                     }
                 }
+                isLoading.value = false
             }
         }
     }
-
     fun retryFetchingPokemonList() {
         viewModelScope.launch {
             _pokemonListState.value = PokemonUiState.Loading
