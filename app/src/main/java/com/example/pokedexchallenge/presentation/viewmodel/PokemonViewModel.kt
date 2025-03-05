@@ -2,8 +2,10 @@ package com.example.pokedexchallenge.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokedexchallenge.data.local.entities.PokemonEntity
 import com.example.pokedexchallenge.domain.model.PokemonItem
 import com.example.pokedexchallenge.data.remote.model.Pokemon
+import com.example.pokedexchallenge.domain.repository.PokemonRepository
 import com.example.pokedexchallenge.domain.usecase.GetPokemonListUseCase
 import com.example.pokedexchallenge.domain.usecase.GetPokemonDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +20,8 @@ import com.example.pokedexchallenge.utils.constants.Constants.IMAGE_BASE_URL
 @HiltViewModel
 class PokemonViewModel @Inject constructor(
     private val getPokemonListUseCase: GetPokemonListUseCase,
-    private val getPokemonDetailUseCase: GetPokemonDetailUseCase
+    private val getPokemonDetailUseCase: GetPokemonDetailUseCase,
+    private val pokemonRepository: PokemonRepository
 ) : ViewModel() {
 
     private val _pokemonListState =
@@ -30,11 +33,17 @@ class PokemonViewModel @Inject constructor(
         MutableStateFlow<PokemonUiState<Pokemon>>(PokemonUiState.Loading)
     val pokemonDetailState: StateFlow<PokemonUiState<Pokemon>> = _pokemonDetailState.asStateFlow()
 
+    private val _favoritePokemonsState =
+        MutableStateFlow<List<PokemonEntity>>(emptyList())
+    val favoritePokemonsState: StateFlow<List<PokemonEntity>> = _favoritePokemonsState
+
     private var currentOffset = 0
     private val pageSize = 20
-
-
     private var allPokemonList: MutableList<PokemonItem> = mutableListOf()
+
+    init {
+        loadFavorites()
+    }
 
     fun fetchPokemonList() {
         viewModelScope.launch {
@@ -48,13 +57,14 @@ class PokemonViewModel @Inject constructor(
                     is Resource.Loading -> {
                         _pokemonListState.value = PokemonUiState.Loading
                     }
+
                     is Resource.Success -> {
                         val newPokemonList =
                             result.data?.results.orEmpty().mapIndexed { index, pokemon ->
                                 val number = currentOffset + index + 1
                                 PokemonItem(
                                     pokemonName = pokemon.name,
-                                    imageUrl = "$IMAGE_BASE_URL$number.png",
+                                    imageUrl = "${IMAGE_BASE_URL}$number.png",
                                     number = number
                                 )
                             }
@@ -85,7 +95,7 @@ class PokemonViewModel @Inject constructor(
                         _pokemonDetailState.value = PokemonUiState.Success(it)
                     } ?: run {
                         _pokemonDetailState.value =
-                            PokemonUiState.Error("Datos del Pokémon no disponibles")
+                            PokemonUiState.Error("Detalles del Pokémon no disponible")
                     }
 
                     is Resource.Error -> _pokemonDetailState.value =
@@ -95,6 +105,46 @@ class PokemonViewModel @Inject constructor(
         }
     }
 
+    fun addFavorite(pokemon: PokemonEntity) {
+        viewModelScope.launch {
+            pokemonRepository.addFavorite(pokemon)
+            loadFavorites()
+        }
+    }
+
+    fun removeFavorite(pokemon: PokemonEntity) {
+        viewModelScope.launch {
+            pokemonRepository.removeFavorite(pokemon)
+            loadFavorites()
+        }
+    }
+
+    suspend fun isFavorite(pokemonId: Int): Boolean {
+        return pokemonRepository.isFavorite(pokemonId)
+    }
+
+
+    fun loadFavorites() {
+        viewModelScope.launch {
+            pokemonRepository.getAllFavorites().collect { favorites ->
+                _favoritePokemonsState.value = favorites
+            }
+        }
+    }
+
+    fun saveSearchQuery(query: String) {
+        viewModelScope.launch {
+            pokemonRepository.saveSearchQuery(query)
+        }
+    }
+
+    fun getRecentSearches() {
+        viewModelScope.launch {
+            pokemonRepository.getRecentSearches().collect { searches ->
+                //todo search manage
+            }
+        }
+    }
 }
 
 sealed class PokemonUiState<out T> {

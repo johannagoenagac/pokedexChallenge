@@ -4,4 +4,9 @@
     <string name="add_favorite_button_label">Agregar a favoritos</string>
     <string name="remove_favorite_button_label">Eliminar de favoritos</string>
     <string name="type_text">Tipo: %1s</string>
+    <string name="height_text">Altura: %1s</string>
+    <string name="weight_text">Peso: %1s</string>
+    <string name="abilities_text">Habilidades: %1s</string>
+    <string name="moves_text">Movimientos: %1s</string>
+    <string name="empty_list_description">No tienes pokemones favoritos></string>
 </resources>
