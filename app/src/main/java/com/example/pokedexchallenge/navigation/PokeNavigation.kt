@@ -41,9 +41,7 @@ fun PokedexNavGraph(navController: NavHostController) {
             }
             composable(POKEMON_DETAIL) { backStackEntry ->
                 val pokemonName = backStackEntry.arguments?.getString("pokemonName") ?: ""
-                PokemonDetailScreen(paddingValues = paddingValues, pokemonName = pokemonName) {
-                    navController.popBackStack()
-                }
+                PokemonDetailScreen(pokemonName = pokemonName)
             }
             composable(FAVORITES_POKEMON_LIST) {
                 FavoritesPokemonListScreen(navController = navController)
