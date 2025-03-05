@@ -25,12 +25,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.capitalize
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.pokedexchallenge.data.remote.model.Pokemon
+import com.example.pokedexchallenge.presentation.ui.components.ActionButton
+import java.util.Locale
+import com.example.pokedexchallenge.R
 
 @Composable
 fun PokemonDetailContent(pokemon: Pokemon) {
@@ -38,11 +44,7 @@ fun PokemonDetailContent(pokemon: Pokemon) {
     val context = LocalContext.current
     var isFavorite by remember { mutableStateOf(false) }
 
-    val imageUrl = pokemon.sprites.front_default
-
-
     val imageUrls = listOfNotNull(
-        //  pokemon.sprites.other.officialartwork.front_default,
         pokemon.sprites.front_default,
         pokemon.sprites.back_default
     )
@@ -70,14 +72,17 @@ fun PokemonDetailContent(pokemon: Pokemon) {
             }
         }
 
+        val name = pokemon.name.capitalize(Locale.ROOT)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = pokemon.name, style = MaterialTheme.typography.headlineMedium)
-        Text(text = "Tipo: ${pokemon.types?.joinToString { it.type.name }}",
-            color = MaterialTheme.colorScheme.onBackground)
+        Text(text = name, style = MaterialTheme.typography.headlineMedium)
+        Text(
+            text = stringResource(id = R.string.type_text, pokemon.types.joinToString { it.type.name } ),
+            color = MaterialTheme.colorScheme.onBackground
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Row {
             ActionButton(
-                text = "Compartir",
+                text = stringResource(id = R.string.share_button_label),
                 icon = Icons.Filled.Share,
                 onClick = {
                     val shareIntent = Intent().apply {
@@ -92,23 +97,14 @@ fun PokemonDetailContent(pokemon: Pokemon) {
                 }
             )
             Spacer(modifier = Modifier.width(16.dp))
+            val textButton = if (isFavorite) stringResource(id = R.string.remove_favorite_button_label)
+            else stringResource(id = R.string.add_favorite_button_label)
+
             ActionButton(
-                text = if (isFavorite) "Eliminar de favoritos" else "Agregar a favoritos",
+                text = textButton,
                 icon = Icons.Filled.Favorite,
                 onClick = { isFavorite = !isFavorite }
             )
-        }
-        }
-    }
-
-
-@Composable
-fun ActionButton(text: String, icon: androidx.compose.ui.graphics.vector.ImageVector, onClick: () -> Unit) {
-    Button(onClick = onClick) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text)
-            Spacer(modifier = Modifier.width(4.dp))
-            Icon(imageVector = icon, contentDescription = text)
         }
     }
 }

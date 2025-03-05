@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PokedexChallenge</string>
+    <string name="share_button_label">Compartir</string>
+    <string name="add_favorite_button_label">Agregar a favoritos</string>
+    <string name="remove_favorite_button_label">Eliminar de favoritos</string>
+    <string name="type_text">Tipo: %1s</string>
 </resources>
