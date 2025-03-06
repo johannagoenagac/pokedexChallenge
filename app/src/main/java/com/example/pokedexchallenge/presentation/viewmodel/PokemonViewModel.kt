@@ -79,7 +79,6 @@ class PokemonViewModel @Inject constructor(
                                 _pokemonListState.value = PokemonUiState.Success(allPokemonList)
                                 currentOffset += pageSize
 
-                                // Si ya alcanzamos el total de la API, marcamos como fin de la lista
                                 endReached.value = allPokemonList.size >= data.count
                             }
                         }
@@ -146,7 +145,6 @@ class PokemonViewModel @Inject constructor(
         }
     }
 
-    // Todo Implment UI
     fun saveSearchQuery(query: String) {
         viewModelScope.launch {
             pokemonRepository.saveSearchQuery(query)

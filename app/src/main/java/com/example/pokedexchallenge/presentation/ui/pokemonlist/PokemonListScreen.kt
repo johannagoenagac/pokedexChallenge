@@ -1,5 +1,6 @@
 package com.example.pokedexchallenge.presentation.ui.pokemonlist
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -13,6 +14,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -27,7 +29,9 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 @Composable
-fun PokemonListScreen(navController: NavController) {
+fun PokemonListScreen(
+    navController: NavController
+) {
 
     val viewModel: PokemonViewModel = hiltViewModel()
     val pokemonListState = viewModel.pokemonListState.collectAsState()
@@ -35,6 +39,7 @@ fun PokemonListScreen(navController: NavController) {
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
+    val context = LocalContext.current as? Activity
 
     LaunchedEffect(Unit) {
         viewModel.fetchPokemonList()
@@ -96,7 +101,9 @@ fun PokemonListScreen(navController: NavController) {
 
             is PokemonUiState.Empty -> {
                 EmptyListScreen(
-                    text = stringResource(id = R.string.empty_pokemon_list_description)
+                    text = stringResource(id = R.string.empty_pokemon_list_description),
+                    onFinish = { context?.finishAffinity() },
+                    onRetry = { viewModel.retryFetchingPokemonList() }
                 )
             }
         }
@@ -108,4 +115,3 @@ fun PokemonListScreen(navController: NavController) {
         )
     }
 }
-
